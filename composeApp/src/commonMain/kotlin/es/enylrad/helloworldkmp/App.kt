@@ -1,8 +1,6 @@
 package es.enylrad.helloworldkmp
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
@@ -18,7 +16,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import coil3.ImageLoader
+import coil3.compose.AsyncImage
+import coil3.compose.setSingletonImageLoaderFactory
+import coil3.request.crossfade
+import coil3.util.DebugLogger
 import es.enylrad.helloworldkmp.model.Movie
 import es.enylrad.helloworldkmp.model.movies
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -28,6 +32,13 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun App() {
     MaterialTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
+            setSingletonImageLoaderFactory { context ->
+                ImageLoader.Builder(context)
+                    .crossfade(true)
+                    //.logger(DebugLogger())
+                    .build()
+
+            }
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(120.dp),
                 contentPadding = PaddingValues(4.dp),
@@ -45,19 +56,20 @@ fun App() {
 @Composable
 fun MovieItem(movie: Movie) {
     Column {
-        Box(
+        AsyncImage(
+            model = movie.poster,
+            contentDescription = movie.title,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(2 / 3f)
                 .clip(MaterialTheme.shapes.small)
-                .background(MaterialTheme.colorScheme.primaryContainer)
-        ) {
-            Text(
-                text = movie.title,
-                style = MaterialTheme.typography.bodySmall,
-                maxLines = 1,
-                modifier = Modifier.padding(8.dp)
-            )
-        }
+        )
+        Text(
+            text = movie.title,
+            style = MaterialTheme.typography.bodySmall,
+            maxLines = 1,
+            modifier = Modifier.padding(8.dp)
+        )
     }
 }
