@@ -1,4 +1,4 @@
-package es.enylrad.helloworldkmp.model
+package es.enylrad.helloworldkmp.core.model
 
 data class Movie(
     val id: Int,
